@@ -1,0 +1,11 @@
+{
+  "name": "gitlist",
+  "version": "1.0.0",
+  "description": "Proyect de clase de app de vanguardia",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write \"src/**/*.{js,jsx}\"" 
+  },
+  "author": "Jose Martinez",
+  "license": "MIT"
+}
