@@ -1,10 +1,12 @@
-import React from 'react';
-
+import React from 'react'
+import { faCheckCircle} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Search = () => {
   return (
-    <div className="search">
-        <input type="text" placeholder="Enter Github Username "></input>
-    </div>
+<form className="example" >
+  <input type="text" placeholder="Enter Github Username" name="search"></input>
+  <div className="icon"><FontAwesomeIcon icon={faCheckCircle} /></div>
+</form>
   );
 };
 
