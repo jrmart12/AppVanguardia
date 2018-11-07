@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 class ListProjects extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            Projects:[],
-            usernameHeader:"",
-            readme:""
-        };
+        this.state = {Projects:[]};
+    }
+    
+    backHandle(e){
+        e.preventDefault();
+        this.props.onBackHandle(this.props.history);
     }
 
     componentDidMount(){
@@ -20,35 +21,29 @@ class ListProjects extends Component {
         } = this.props;
 
         axios.get(`https://api.github.com/users/${params.username}/repos`).then(Projects => this.setState(()=>({
-            Projects: Projects.data,
-            usernameHeader:params.username
+            Projects: Projects.data
         }))).catch(err => console.log(err.message)); //eslint-disable-line
     }
 
-    handleSubmit(){
-        const { match: {params} } = this.props;
-        axios.get(`https://api.github.com/users/${params.username}/${params.name}/readme`)
-        .then(p => this.setState(() => ({
-            readMe: p.name, 
-        }))
-        ).catch(err => console.log(err.message)); //eslint-disable-line
+    clickProject(id, projectName, user){
+        console.log(`projectName: ${projectName} - id: ${id} - user: ${user}`); //eslint-disable-line
+        if(this.props.onClickProject && projectName && id && user)
+            this.props.onClickProject(this.props.history, user, id, projectName);
     }
-
     render(){
         return (
             <div>
-                <Header usernameHeader={this.state.usernameHeader}/>
+                <Header usernameHeader={this.props.match.params.username} backHandle={this.backHandle.bind(this)}/>
                 <div className="container list">
                         <h4>Projects</h4>
                     <section className="eight offset-by-two columns" style={{boxShadow: ' 0 3px 30px 0 , 0 3px 3px 0'}}> 
                     {this.state.Projects.map((data) =>
                                 <ul  className="list"  key={data.id}>
-                                    <button onSubmit={this.handleSubmit} style={{border: 'none'}}>
+                                    <button onClick={this.clickProject.bind(this,data.id,data.name,data.owner.login)} style={{border: 'none'}}>
                                         {data.name}
                                     </button>
                                 </ul>
                             )}
-                            
                     </section>
                 </div>
             </div>
@@ -57,7 +52,10 @@ class ListProjects extends Component {
 }
 
 ListProjects.propTypes = {
-    match: PropTypes.object.isRequired
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    onBackHandle: PropTypes.func.isRequired,
+    onClickProject: PropTypes.func.isRequired
 };
 
 export default ListProjects;
